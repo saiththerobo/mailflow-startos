@@ -16,6 +16,14 @@ const dict = {
   // interfaces.ts
   'Web UI': 10,
   'The MailFlow webmail interface': 11,
+
+  // actions/resetAdminPassword.ts
+  'Reset Admin Password': 12,
+  'Change the password for the first registered (admin) MailFlow account': 13,
+  'New Password': 14,
+  'The new password for the MailFlow admin account': 15,
+  'Password Reset': 16,
+  'The admin password has been updated. You can now log in with the new password.': 17,
 } as const
 
 /**
