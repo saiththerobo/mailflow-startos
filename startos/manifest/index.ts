@@ -4,7 +4,7 @@ import { long, short } from './i18n'
 export const manifest = setupManifest({
   id: 'mailflow',
   title: 'MailFlow',
-  license: 'MIT',
+  license: 'AGPL-3.0',
   packageRepo: 'https://github.com/saiththerobo/mailflow-startos',
   upstreamRepo: 'https://github.com/maathimself/mailflow',
   marketingUrl: 'https://mailflow.sh/',
