@@ -1,20 +1,20 @@
 export const short = {
-  en_US: 'Bare bones example of a StartOS service',
-  es_ES: 'Ejemplo básico de un servicio de StartOS',
-  de_DE: 'Minimales Beispiel eines StartOS-Dienstes',
-  pl_PL: 'Podstawowy przykład usługi StartOS',
-  fr_FR: "Exemple minimaliste d'un service StartOS",
+  en_US: 'Self-hosted unified webmail for Gmail, iCloud, and any IMAP inbox',
+  es_ES: 'Correo web unificado autoalojado para Gmail, iCloud y cualquier bandeja IMAP',
+  de_DE: 'Selbst gehostetes einheitliches Webmail für Gmail, iCloud und jede IMAP-Mailbox',
+  pl_PL: 'Samodzielnie hostowany ujednolicony klient poczty dla Gmail, iCloud i każdego IMAP',
+  fr_FR: 'Webmail unifié auto-hébergé pour Gmail, iCloud et toute boîte IMAP',
 }
 
 export const long = {
   en_US:
-    'Hello World is a template service that provides examples of basic StartOS features.',
+    'MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxes — Gmail, iCloud, Outlook, and any IMAP server — into a single, clean interface. Features include a unified inbox, multiple layouts, dark and light themes, real-time push notifications, and full-text search across all your accounts simultaneously.',
   es_ES:
-    'Hello World es un servicio de plantilla que proporciona ejemplos de las características básicas de StartOS.',
+    'MailFlow es un cliente de correo web moderno y autoalojado que agrega múltiples bandejas — Gmail, iCloud, Outlook y cualquier servidor IMAP — en una sola interfaz limpia, con bandeja unificada, notificaciones en tiempo real y búsqueda en todos los buzones.',
   de_DE:
-    'Hello World ist ein Vorlagen-Dienst, der Beispiele für grundlegende StartOS-Funktionen bietet.',
+    'MailFlow ist ein moderner, selbst gehosteter Webmail-Client, der mehrere Postfächer — Gmail, iCloud, Outlook und jeden IMAP-Server — in einer einzigen, übersichtlichen Oberfläche mit vereinheitlichtem Posteingang, Echtzeit-Benachrichtigungen und übergreifender Volltextsuche zusammenführt.',
   pl_PL:
-    'Hello World to szablon usługi, który zawiera przykłady podstawowych funkcji StartOS.',
+    'MailFlow to nowoczesny, samodzielnie hostowany klient poczty webowej, który agreguje wiele skrzynek pocztowych — Gmail, iCloud, Outlook i każdy serwer IMAP — w jednym, przejrzystym interfejsie z ujednoliconą skrzynką odbiorczą, powiadomieniami w czasie rzeczywistym i wyszukiwaniem pełnotekstowym.',
   fr_FR:
-    'Hello World est un service modèle qui fournit des exemples des fonctionnalités de base de StartOS.',
+    "MailFlow est un client webmail moderne et auto-hébergé qui regroupe plusieurs boîtes de réception — Gmail, iCloud, Outlook et tout serveur IMAP — dans une interface unique et épurée avec boîte de réception unifiée, notifications en temps réel et recherche plein texte sur tous les comptes.",
 }

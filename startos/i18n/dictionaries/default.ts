@@ -2,14 +2,20 @@ export const DEFAULT_LANG = 'en_US'
 
 const dict = {
   // main.ts
-  'Starting Hello World!': 0,
-  'Web Interface': 1,
-  'The web interface is ready': 2,
-  'The web interface is not ready': 3,
+  'Starting MailFlow': 0,
+  'Waiting for PostgreSQL': 1,
+  'PostgreSQL is ready': 2,
+  'Waiting for Redis': 3,
+  'Redis is ready': 4,
+  'The API is ready': 5,
+  'The API is not ready': 6,
+  'Web Interface': 7,
+  'The web interface is ready': 8,
+  'The web interface is not ready': 9,
 
   // interfaces.ts
-  'Web UI': 4,
-  'The web interface of Hello World': 5,
+  'Web UI': 10,
+  'The MailFlow webmail interface': 11,
 } as const
 
 /**
