@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
 import { uiPort, backendPort, nginxConf } from './utils'
@@ -56,6 +56,24 @@ export const main = sdk.setupMain(async ({ effects }) => {
   await writeFile(
     `${frontendSub.rootfs}/etc/nginx/conf.d/default.conf`,
     nginxConf,
+  )
+
+  // Upstream v1.0.2 bug: the threaded messages CTE uses m.is_read in a FILTER
+  // clause but omits it from the SELECT list, so the outer query's `is_read`
+  // reference throws PostgreSQL error 42703 (undefined_column) on every inbox
+  // load. Patch the file in the backend rootfs before the daemon starts.
+  const mailJsPath = `${backendSub.rootfs}/app/src/routes/mail.js`
+  const mailJs = await readFile(mailJsPath, 'utf8')
+  const patchMarker = 'm.date, m.snippet, m.is_starred,\n               m.has_attachments,'
+  if (!mailJs.includes(patchMarker)) {
+    throw new Error('mail.js patch marker not found — upstream image may have changed')
+  }
+  await writeFile(
+    mailJsPath,
+    mailJs.replace(
+      patchMarker,
+      'm.date, m.snippet, m.is_starred,\n               m.is_read, m.has_attachments,',
+    ),
   )
 
   return sdk.Daemons.of(effects)
