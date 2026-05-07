@@ -22,6 +22,7 @@ MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxe
 - [Health Checks](#health-checks)
 - [Dependencies](#dependencies)
 - [Limitations and Differences](#limitations-and-differences)
+- [License](#license)
 - [Contributing](#contributing)
 - [Quick Reference for AI Consumers](#quick-reference-for-ai-consumers)
 
@@ -90,7 +91,9 @@ No user-facing configuration form. All runtime settings are passed via environme
 
 ## Actions (StartOS UI)
 
-None in this initial release.
+| Action | Description |
+| ------ | ----------- |
+| Reset Admin Password | Resets the password for the first registered (admin) account |
 
 ---
 
@@ -130,6 +133,14 @@ None. All required services (postgres, redis) run as internal sidecar containers
 
 ---
 
+## License
+
+MailFlow is dual-licensed: **AGPL-3.0** for open-source use, and a **commercial license** for proprietary/commercial use. See the [upstream repository](https://github.com/maathimself/mailflow) for commercial licensing options.
+
+This StartOS packaging is licensed under AGPL-3.0 (matching upstream).
+
+---
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development workflow.
@@ -156,7 +167,7 @@ ports:
   ui: 80
 startup_order: [postgres, redis] -> backend -> frontend
 dependencies: none
-actions: none
+actions: [reset-admin-password]
 startos_managed_env_vars:
   - SESSION_SECRET
   - DB_PASSWORD
