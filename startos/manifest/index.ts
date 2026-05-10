@@ -14,11 +14,11 @@ export const manifest = setupManifest({
   volumes: ['main'],
   images: {
     'mailflow-frontend': {
-      source: { dockerTag: 'ghcr.io/maathimself/mailflow-frontend:1.0.3' },
+      source: { dockerBuild: { workdir: '../services/mailflow/frontend' } },
       arch: ['x86_64', 'aarch64'],
     },
     'mailflow-backend': {
-      source: { dockerTag: 'ghcr.io/maathimself/mailflow-backend:1.0.3' },
+      source: { dockerBuild: { workdir: '../services/mailflow/backend' } },
       arch: ['x86_64', 'aarch64'],
     },
     postgres: {
