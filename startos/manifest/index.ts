@@ -14,11 +14,21 @@ export const manifest = setupManifest({
   volumes: ['main'],
   images: {
     'mailflow-frontend': {
-      source: { dockerBuild: { workdir: '../services/mailflow/frontend' } },
+      source: {
+        dockerBuild: {
+          workdir: '../services/mailflow/frontend',
+          buildArgs: { VITE_BUILD_SHA: { env: 'GIT_SHA' } },
+        },
+      },
       arch: ['x86_64', 'aarch64'],
     },
     'mailflow-backend': {
-      source: { dockerBuild: { workdir: '../services/mailflow/backend' } },
+      source: {
+        dockerBuild: {
+          workdir: '../services/mailflow/backend',
+          buildArgs: { BUILD_SHA: { env: 'GIT_SHA' } },
+        },
+      },
       arch: ['x86_64', 'aarch64'],
     },
     postgres: {
