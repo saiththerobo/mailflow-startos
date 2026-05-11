@@ -6,7 +6,7 @@
 
 > **Upstream repo:** <https://github.com/maathimself/mailflow>
 
-MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxes — Gmail, iCloud, Outlook, and any IMAP server — into a single, clean interface. Features include a unified inbox, multiple layouts, dark and light themes, real-time push notifications, and full-text search across all your accounts simultaneously.
+MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxes — Gmail, iCloud, Outlook, Yahoo, and any IMAP server — into a single, clean interface. Features include a unified inbox, rich-text and plain-text composer with file attachments, multiple layouts, dark and light themes, real-time push notifications, full-text search across all accounts, and an About tab displaying the running version and build SHA.
 
 ---
 
@@ -30,12 +30,14 @@ MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxe
 
 ## Image and Container Runtime
 
-| Container | Image | Architectures |
-| --------- | ----- | ------------- |
-| Frontend (nginx) | `ghcr.io/maathimself/mailflow-frontend:1.0.2` | x86_64, aarch64 |
-| Backend (Node.js) | `ghcr.io/maathimself/mailflow-backend:1.0.2` | x86_64, aarch64 |
+| Container | Source | Architectures |
+| --------- | ------ | ------------- |
+| Frontend (nginx) | Built from source (`services/mailflow/frontend`) | x86_64, aarch64 |
+| Backend (Node.js) | Built from source (`services/mailflow/backend`) | x86_64, aarch64 |
 | Database | `postgres:16-alpine` | x86_64, aarch64 |
 | Cache | `redis:7-alpine` | x86_64, aarch64 |
+
+The frontend and backend images are built directly from the [saiththerobo/mailflow](https://github.com/saiththerobo/mailflow) fork of the upstream source. The git SHA of that source is baked into the images at build time and displayed in Settings → About.
 
 Startup order: **postgres** and **redis** start first (in parallel), then **backend** waits for both, then **frontend** waits for backend.
 
@@ -58,7 +60,7 @@ The nginx config baked into the frontend image is overridden at every startup to
 1. Install the package — three secrets are generated automatically: `SESSION_SECRET`, `DB_PASSWORD`, and `ENCRYPTION_KEY`.
 2. The service's LAN URL is detected and stored as `APP_URL` (required by the backend for WebSocket origin validation).
 3. Start the service — postgres initialises its database on the first boot (takes ~10 seconds).
-4. Open the web UI and create your account, then add your email accounts (Gmail, iCloud, IMAP, etc.).
+4. Open the web UI and create your account, then add your email accounts (Gmail, iCloud, Yahoo, IMAP, etc.).
 
 ---
 
@@ -129,7 +131,7 @@ None. All required services (postgres, redis) run as internal sidecar containers
 1. **WebSocket notifications** work only when accessing MailFlow from the LAN `.local` address. Tor/clearnet access connects fine but real-time push is blocked by WebSocket origin validation (a future "Set Primary URL" action will fix this).
 2. **Google OAuth** (sign in with Google) is not configured — add your Gmail account via IMAP/App Password instead.
 3. **VAPID push notifications** are disabled.
-4. **riscv64** is not supported — the upstream GHCR images are only published for x86_64 and aarch64.
+4. **riscv64** is not supported — the upstream source does not target that architecture.
 
 ---
 
@@ -151,13 +153,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development wo
 
 ```yaml
 package_id: mailflow
-upstream_version: 1.0.2
+upstream_version: 1.0.4
 architectures: [x86_64, aarch64]
 containers:
-  frontend: ghcr.io/maathimself/mailflow-frontend:1.0.2  # nginx, port 80
-  backend:  ghcr.io/maathimself/mailflow-backend:1.0.2   # node, port 3000
-  postgres: postgres:16-alpine                            # port 5432, bind 127.0.0.1
-  redis:    redis:7-alpine                                # port 6379, bind 127.0.0.1
+  frontend: built from source (services/mailflow/frontend)  # nginx, port 80
+  backend:  built from source (services/mailflow/backend)   # node, port 3000
+  postgres: postgres:16-alpine                               # port 5432, bind 127.0.0.1
+  redis:    redis:7-alpine                                   # port 6379, bind 127.0.0.1
 volumes:
   main:
     postgres/: postgresql data directory
