@@ -1,6 +1,13 @@
 export const uiPort = 80
 export const backendPort = 3000
 
+const securityHeaders = `
+    add_header X-Content-Type-Options    "nosniff" always;
+    add_header X-Frame-Options           "SAMEORIGIN" always;
+    add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
+    add_header Content-Security-Policy   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data: https:; img-src 'self' data: https: blob:; connect-src 'self' wss: ws:; frame-src 'self'; object-src 'none'; base-uri 'self';" always;`
+
 // HTTP-only nginx config written to the frontend container's rootfs at startup.
 // Replaces the image's default config (which has both HTTP and HTTPS blocks and
 // hardcodes "backend" as the upstream hostname).  Here we drop the HTTPS block
@@ -9,12 +16,7 @@ export const backendPort = 3000
 export const nginxConf = `server {
     listen 80;
     server_name _;
-
-    add_header X-Content-Type-Options    "nosniff" always;
-    add_header X-Frame-Options           "SAMEORIGIN" always;
-    add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
-    add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
-    add_header Content-Security-Policy   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data: https:; img-src 'self' data: https: blob:; connect-src 'self' wss: ws:; frame-src 'self'; object-src 'none'; base-uri 'self';" always;
+${securityHeaders}
 
     root /usr/share/nginx/html;
     index index.html;
@@ -70,20 +72,12 @@ export const nginxConf = `server {
     location / {
         try_files $uri $uri/ /index.html;
         add_header Cache-Control "no-store" always;
-        add_header X-Content-Type-Options    "nosniff" always;
-        add_header X-Frame-Options           "SAMEORIGIN" always;
-        add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
-        add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
-        add_header Content-Security-Policy   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data: https:; img-src 'self' data: https: blob:; connect-src 'self' wss: ws:; frame-src 'self'; object-src 'none'; base-uri 'self';" always;
+${securityHeaders}
     }
 
     location = /sw.js {
         add_header Cache-Control "no-store" always;
-        add_header X-Content-Type-Options    "nosniff" always;
-        add_header X-Frame-Options           "SAMEORIGIN" always;
-        add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
-        add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
-        add_header Content-Security-Policy   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data: https:; img-src 'self' data: https: blob:; connect-src 'self' wss: ws:; frame-src 'self'; object-src 'none'; base-uri 'self';" always;
+${securityHeaders}
     }
 
     location ~* \\.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?)$ {
