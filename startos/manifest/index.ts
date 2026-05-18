@@ -17,7 +17,7 @@ export const manifest = setupManifest({
       source: {
         dockerBuild: {
           workdir: '../services/mailflow',
-          dockerfile: 'frontend/Dockerfile',
+          dockerfile: '../services/mailflow/frontend/Dockerfile',
           buildArgs: { VITE_BUILD_SHA: { env: 'GIT_SHA' } },
         },
       },
@@ -27,7 +27,7 @@ export const manifest = setupManifest({
       source: {
         dockerBuild: {
           workdir: '../services/mailflow',
-          dockerfile: 'backend/Dockerfile',
+          dockerfile: '../services/mailflow/backend/Dockerfile',
           buildArgs: { BUILD_SHA: { env: 'GIT_SHA' } },
         },
       },
