@@ -1,6 +1,11 @@
 import { setupManifest } from '@start9labs/start-sdk'
 import { long, short } from './i18n'
 
+// USE_UPSTREAM=1 make x86  → pull official ghcr.io images (for releases)
+// make x86                 → build from ../services/mailflow source (for dev)
+const upstream = process.env.USE_UPSTREAM === '1'
+const upstreamVersion = 'v1.2.0'
+
 export const manifest = setupManifest({
   id: 'mailflow',
   title: 'MailFlow',
@@ -14,23 +19,27 @@ export const manifest = setupManifest({
   volumes: ['main'],
   images: {
     'mailflow-frontend': {
-      source: {
-        dockerBuild: {
-          workdir: '../services/mailflow',
-          dockerfile: '../services/mailflow/frontend/Dockerfile',
-          buildArgs: { VITE_BUILD_SHA: { env: 'GIT_SHA' } },
-        },
-      },
+      source: upstream
+        ? { dockerTag: `ghcr.io/maathimself/mailflow-frontend:${upstreamVersion}` }
+        : {
+            dockerBuild: {
+              workdir: '../services/mailflow',
+              dockerfile: '../services/mailflow/frontend/Dockerfile',
+              buildArgs: { VITE_BUILD_SHA: { env: 'GIT_SHA' } },
+            },
+          },
       arch: ['x86_64', 'aarch64'],
     },
     'mailflow-backend': {
-      source: {
-        dockerBuild: {
-          workdir: '../services/mailflow',
-          dockerfile: '../services/mailflow/backend/Dockerfile',
-          buildArgs: { BUILD_SHA: { env: 'GIT_SHA' } },
-        },
-      },
+      source: upstream
+        ? { dockerTag: `ghcr.io/maathimself/mailflow-backend:${upstreamVersion}` }
+        : {
+            dockerBuild: {
+              workdir: '../services/mailflow',
+              dockerfile: '../services/mailflow/backend/Dockerfile',
+              buildArgs: { BUILD_SHA: { env: 'GIT_SHA' } },
+            },
+          },
       arch: ['x86_64', 'aarch64'],
     },
     postgres: {
