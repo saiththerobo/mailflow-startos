@@ -6,7 +6,7 @@
 
 > **Upstream repo:** <https://github.com/maathimself/mailflow>
 
-MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxes — Gmail, iCloud, Outlook, Yahoo, and any IMAP server — into a single, clean interface. Features include a unified inbox, rich-text and plain-text composer with file attachments, multiple layouts, dark and light themes, real-time push notifications, full-text search across all accounts, and an About tab displaying the running version and build SHA.
+MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxes — Gmail, iCloud, Outlook, Yahoo, and any IMAP server — into a single, clean interface. Features include a unified inbox, rich-text composer with font size/family picker and file attachments, multiple layouts, dark and light themes, real-time push notifications, full-text search across all accounts, local SSO providers with self-signed certificates, and an About tab displaying the running version and build SHA.
 
 ---
 
@@ -32,12 +32,19 @@ MailFlow is a modern, self-hosted webmail client that aggregates multiple inboxe
 
 | Container | Source | Architectures |
 | --------- | ------ | ------------- |
-| Frontend (nginx) | Built from source (`services/mailflow/frontend`) | x86_64, aarch64 |
-| Backend (Node.js) | Built from source (`services/mailflow/backend`) | x86_64, aarch64 |
+| Frontend (nginx) | See build modes below | x86_64, aarch64 |
+| Backend (Node.js) | See build modes below | x86_64, aarch64 |
 | Database | `postgres:16-alpine` | x86_64, aarch64 |
 | Cache | `redis:7-alpine` | x86_64, aarch64 |
 
-The frontend and backend images are built directly from the [saiththerobo/mailflow](https://github.com/saiththerobo/mailflow) fork of the upstream source. The git SHA of that source is baked into the images at build time and displayed in Settings → About.
+**Build modes** — controlled by the `USE_UPSTREAM` environment variable:
+
+| Command | Image source | Use case |
+| ------- | ------------ | -------- |
+| `make x86` | Built from `../services/mailflow` source ([saiththerobo/mailflow](https://github.com/saiththerobo/mailflow)) | Development / unreleased changes |
+| `make x86-upstream` | `ghcr.io/maathimself/mailflow-{frontend,backend}:vX.Y.Z` | Releases against official images |
+
+The `upstreamVersion` constant in `startos/manifest/index.ts` controls which tag is pulled in upstream mode. The git SHA of the local source is baked into the images at build time and displayed in Settings → About (source builds only).
 
 Startup order: **postgres** and **redis** start first (in parallel), then **backend** waits for both, then **frontend** waits for backend.
 
@@ -153,11 +160,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development wo
 
 ```yaml
 package_id: mailflow
-upstream_version: 1.0.4
+upstream_version: 1.2.0
 architectures: [x86_64, aarch64]
 containers:
-  frontend: built from source (services/mailflow/frontend)  # nginx, port 80
-  backend:  built from source (services/mailflow/backend)   # node, port 3000
+  frontend: source build or ghcr.io/maathimself/mailflow-frontend  # nginx, port 80
+  backend:  source build or ghcr.io/maathimself/mailflow-backend   # node, port 3000
   postgres: postgres:16-alpine                               # port 5432, bind 127.0.0.1
   redis:    redis:7-alpine                                   # port 6379, bind 127.0.0.1
 volumes:
