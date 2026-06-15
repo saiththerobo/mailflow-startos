@@ -4,7 +4,8 @@ import { long, short } from './i18n'
 // USE_UPSTREAM=1 make x86  → pull official ghcr.io images (for releases)
 // make x86                 → build from ../services/mailflow source (for dev)
 const upstream = process.env.USE_UPSTREAM === '1'
-const upstreamVersion = '1.3.0'
+const upstreamVersion = '1.6.0'
+const upstreamOwner = 'maathimself'
 
 export const manifest = setupManifest({
   id: 'mailflow',
@@ -20,7 +21,7 @@ export const manifest = setupManifest({
   images: {
     'mailflow-frontend': {
       source: upstream
-        ? { dockerTag: `ghcr.io/maathimself/mailflow-frontend:${upstreamVersion}` }
+        ? { dockerTag: `ghcr.io/${upstreamOwner}/mailflow-frontend:${upstreamVersion}` }
         : {
             dockerBuild: {
               workdir: '../services/mailflow',
@@ -32,7 +33,7 @@ export const manifest = setupManifest({
     },
     'mailflow-backend': {
       source: upstream
-        ? { dockerTag: `ghcr.io/maathimself/mailflow-backend:${upstreamVersion}` }
+        ? { dockerTag: `ghcr.io/${upstreamOwner}/mailflow-backend:${upstreamVersion}` }
         : {
             dockerBuild: {
               workdir: '../services/mailflow',
