@@ -4,7 +4,7 @@ import { long, short } from './i18n'
 // USE_UPSTREAM=1 make x86  → pull official ghcr.io images (for releases)
 // make x86                 → build from ../services/mailflow source (for dev)
 const upstream = process.env.USE_UPSTREAM === '1'
-const upstreamVersion = '1.6.0'
+const upstreamVersion = '3.3.0'
 const upstreamOwner = 'maathimself'
 
 export const manifest = setupManifest({
