@@ -48,7 +48,7 @@ The `upstreamVersion` constant in `startos/manifest/index.ts` controls which tag
 
 Startup order: **postgres** and **redis** start first (in parallel), then **backend** waits for both, then **frontend** waits for backend.
 
-The nginx config baked into the frontend image is overridden at every startup to remove the HTTPS server block (StartOS terminates TLS) and replace the `backend` Docker DNS hostname with `127.0.0.1` (all subcontainers share the same network namespace).
+The nginx config baked into the frontend image is overridden at every startup to remove the HTTPS server block (StartOS terminates TLS) and replace the `backend` Docker DNS hostname with `127.0.0.1` (all subcontainers share the same network namespace). The override reproduces upstream's route-specific proxy timeouts, including the long-running `/api/rules/run` and unbuffered `/api/ai/` (SSE) endpoints. Upstream supports being overridden this way: its resolver line carries a `# mailflow-managed` marker and a replacement file without it is left alone.
 
 ---
 
@@ -136,7 +136,7 @@ None. All required services (postgres, redis) run as internal sidecar containers
 ## Limitations and Differences
 
 1. **WebSocket notifications** work only when accessing MailFlow from the LAN `.local` address. Tor/clearnet access connects fine but real-time push is blocked by WebSocket origin validation (a future "Set Primary URL" action will fix this).
-2. **Google OAuth** (sign in with Google) is not configured — add your Gmail account via IMAP/App Password instead.
+2. **Gmail OAuth** is supported upstream but not configured here — the package does not set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`, so connect Gmail with an app password instead.
 3. **VAPID push notifications** are disabled.
 4. **riscv64** is not supported — the upstream source does not target that architecture.
 
@@ -152,7 +152,7 @@ This StartOS packaging is licensed under AGPL-3.0 (matching upstream).
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development workflow.
+See [AGENTS.md](AGENTS.md) for how this package is put together, and [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development workflow.
 
 ---
 
@@ -160,7 +160,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development wo
 
 ```yaml
 package_id: mailflow
-upstream_version: 1.2.0
 architectures: [x86_64, aarch64]
 containers:
   frontend: source build or ghcr.io/maathimself/mailflow-frontend  # nginx, port 80

@@ -12,7 +12,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
 
   const { sessionSecret, dbPassword, encryptionKey, appUrl } = store
 
-  const postgresSub = await sdk.SubContainer.of(
+  const postgresSub = sdk.SubContainer.of(
     effects,
     { imageId: 'postgres' },
     sdk.Mounts.of().mountVolume({
@@ -24,7 +24,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     'postgres-sub',
   )
 
-  const redisSub = await sdk.SubContainer.of(
+  const redisSub = sdk.SubContainer.of(
     effects,
     { imageId: 'redis' },
     sdk.Mounts.of().mountVolume({
@@ -36,14 +36,14 @@ export const main = sdk.setupMain(async ({ effects }) => {
     'redis-sub',
   )
 
-  const backendSub = await sdk.SubContainer.of(
+  const backendSub = sdk.SubContainer.of(
     effects,
     { imageId: 'mailflow-backend' },
     sdk.Mounts.of(),
     'backend-sub',
   )
 
-  const frontendSub = await sdk.SubContainer.of(
+  const frontendSub = sdk.SubContainer.of(
     effects,
     { imageId: 'mailflow-frontend' },
     sdk.Mounts.of(),
@@ -54,7 +54,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
   // (StartOS terminates TLS) and replace "backend" hostname with 127.0.0.1
   // (all subcontainers in a StartOS service share the same network namespace).
   await writeFile(
-    `${frontendSub.rootfs}/etc/nginx/conf.d/default.conf`,
+    `${await frontendSub.rootfs}/etc/nginx/conf.d/default.conf`,
     nginxConf,
   )
 

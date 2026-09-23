@@ -47,6 +47,30 @@ ${securityHeaders}
         proxy_read_timeout 30s;
     }
 
+    # Long-running API operations (rules run iterates all inbox messages via IMAP)
+    location = /api/rules/run {
+        proxy_pass         http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $http_x_forwarded_proto;
+        proxy_read_timeout 300s;
+    }
+
+    # AI streaming endpoints - long timeout, no buffering (SSE)
+    location /api/ai/ {
+        proxy_pass             http://127.0.0.1:3000;
+        proxy_http_version     1.1;
+        proxy_set_header       Host $host;
+        proxy_set_header       X-Real-IP $remote_addr;
+        proxy_set_header       X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header       X-Forwarded-Proto $http_x_forwarded_proto;
+        proxy_read_timeout     300s;
+        proxy_buffering        off;
+        proxy_cache            off;
+    }
+
     location /api/ {
         proxy_pass         http://127.0.0.1:3000;
         proxy_http_version 1.1;

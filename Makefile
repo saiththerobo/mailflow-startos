@@ -2,7 +2,7 @@ ARCHES := x86 arm
 GIT_SHA := $(shell git -C ../services/mailflow rev-parse --short HEAD 2>/dev/null || echo dev)
 export GIT_SHA
 # overrides to s9pk.mk must precede the include statement
-include s9pk.mk
+include node_modules/@start9labs/start-sdk/s9pk.mk
 
 # Build using official upstream images instead of local source
 x86-upstream:
